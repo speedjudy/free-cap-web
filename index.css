@@ -1,0 +1,126 @@
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  margin-left: 2rem;
+}
+
+.custom-small * {
+  font-size: 0.75rem !important;
+}
+
+.btn-small {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.no-border {
+  border: 0;
+  box-shadow: none;
+}
+
+.dot {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.w-35 {
+  width: 35% !important;
+}
+
+.bg-blue {
+  background-color: #0d6efd;
+}
+
+.text-blue {
+  color: #0d6efd;
+}
+
+.bg-purple {
+  background-color: #6f42c1;
+}
+
+.bg-orange {
+  background-color: #fd7e14;
+}
+
+.bg-yellow {
+  background-color: #ffc107;
+}
+
+.dropdown-toggle.remove-after::after {
+  display: none;
+}
+
+.w-90 {
+  width: 90%;
+}
+
+.accordion-button:not(.collapsed) {
+  color: unset;
+  background-color: unset;
+  box-shadow: unset;
+}
+
+.text-purple {
+  color: #6f42c1;
+}
+
+.text-orange {
+  color: #fd7e14;
+}
+
+sub {
+  bottom: -1em;
+}
+
+.btn-outline-pink {
+  color: black;
+}
+
+.btn-outline-pink:hover {
+  color: black;
+  background-color: lavenderblush;
+}
+
+.btn-check:focus+.btn-outline-pink, .btn-outline-pink:focus {
+  box-shadow: 0 0 0 .25rem rgba(25, 135, 84, 0.5)
+}
+
+.btn-check:checked+.btn-outline-pink, .btn-check:active+.btn-outline-pink, .btn-outline-pink:active, .btn-outline-pink.active, .btn-outline-pink.dropdown-toggle.show {
+  color: black;
+  background-color: lavenderblush;
+}
+
+.btn-check:checked+.btn-outline-pink:focus, .btn-check:active+.btn-outline-pink:focus, .btn-outline-pink:active:focus, .btn-outline-pink.active:focus, .btn-outline-pink.dropdown-toggle.show:focus {
+  box-shadow: 0 0 0 .25rem rgba(25, 135, 84, 0.5);
+}
+
+.show-if-checked {
+  display: none;
+}
+
+.btn-check:checked+.btn-outline-pink .show-if-checked {
+  display: inline;
+}
+
+.btn-outline-pink:disabled, .btn-outline-pink.disabled {
+  color: lavenderblush;
+  background-color: transparent
+}
+
+.c-bg-yellow {
+  background-color: #F3E6BB;
+}
+
+.border-blue {
+  border-color: #0d6efd!important;
+}

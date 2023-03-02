@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Admin View &mdash; FreeCap Financials</title>
+  <meta name="description" content="Admin View. FreeCap Financials.">
+  <meta property="og:title" content="Admin View. FreeCap Financials.">
+  <meta property="og:description" content="Admin View. FreeCap Financials.">
+  <meta property="og:image" content="images/logo128.png">
+  <meta property="og:site_name" content="FreeCap Financials">
+  <meta property="og:locale" content="en_NG">
+  <meta name="keywords" content="FreeCap Financials">
+  <meta name="MobileOptimized" content="width">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="author" content="FreeCap Financials">
+  <meta name="copyright" content="FreeCap Financials">
+  <meta name="distribution" content="global">
+  <meta name="generator" content="microsoft visual studio community edition">
+  <meta name="language" content="English">
+  <meta name="rating" content="safe for kids">
+
+  <link rel="canonical" href="admin.html">
+  <link rel="apple-touch-icon" sizes="128x128" href="images/logo128.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="images/logo48.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/logo32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/logo16.png">
+  <meta name="msapplication-TileColor" content="#2B5A92">
+  <meta name="theme-color" content="#2B5A92">
+
+  <link href="assets/css/theme.css" rel="stylesheet">
+  <script src="scripts/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="styles/fontawesome-free/css/all.min.css">
+  <script src="scripts/jquery.min.js"></script>
+  <link rel="stylesheet" href="styles/table-sortable.css">
+  <script src="scripts/table-sortable.js"></script>
+  <link rel="stylesheet" href="index.css">
+  <script src="scripts/firebase-app-compat.js"></script>
+  <script src="scripts/firebase-auth-compat.js"></script>
+  <script src="scripts/firebase-firestore-compat.js"></script>
+  <script src="scripts/firebase-functions-compat.js"></script>
+  <script src="scripts/firebase-storage-compat.js"></script>
+  <script src="index.js"></script>
+</head>
+
+<body>
+  <div class="my-5 px-3 text-center" id="auth-unknown-container">
+    <div style="width: 400px;" class="mx-auto">
+      <div class="spinner-border text-primary" id="auth-loading-container" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div style="display: none;" id="auth-failure-container">
+        <div class="fs-3 mb-2 text-center">Login</div>
+        <div class="input-group">
+          <span class="input-group-text">Email</span>
+          <input type="text" class="form-control" id="loginEmailInput" placeholder="Admin's Email">
+          <button class="btn btn-outline-primary" type="button" id="loginButton">
+            <span class="login-button-toggle" id="login-button-toggle-text">Login</span>
+            <span class="fa fa-circle-notch fa-spin login-button-toggle" id="login-button-toggle-spinner"
+              style="display: none;"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="min-width: 820px; display: none;" class="container" id="auth-success-container">
+    <div class="d-flex justify-content-between mt-3 mb-5" style="height: 40px;">
+      <button type="button" class="btn btn-dark" id="logout" aria-expanded="false">
+        <i class="fa fa-sign-out"></i>
+      </button>
+      <img src="images/logo-long.png" class="img-fluid" style="height: 60px;" alt="Logo">
+      <div class="dropdown">
+        <button type="button" class="btn btn-dark dropdown-toggle position-relative" data-bs-toggle="dropdown"
+          id="notificationDropDownMenu" aria-expanded="false">
+          <i class="fa fa-bell"></i>
+          <span id="notification-count"
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            0
+          </span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="notificationDropDownMenu" id="notificationDropDownMenuContent">
+        </ul>
+      </div>
+    </div>
+    <div class="row m-0">
+      <table class="table table-borderless table-sm">
+        <thead>
+          <tr>
+            <th colspan="2" scope="col">Update Methodology</th>
+            <th colspan="3" scope="col">Add New Analyst</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="custom-small">
+            <th scope="row">
+              <div class="dropdown">
+                <button class="btn btn-outline-dark btn-small dropdown-toggle w-100" type="button"
+                  id="download-file-system" data-bs-toggle="dropdown" aria-expanded="false">
+                  DOWNLOAD EXISITING <i class="fa fa-download"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="download-file-system">
+                  <li>
+                    <a class="dropdown-item" id="company-list-download-button" target="_blank">Company List</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" id="metric-list-download-button" target="_blank">Metric List</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" id="verification-list-download-button" target="_blank">Verification
+                      List</a>
+                  </li>
+                </ul>
+              </div>
+            </th>
+            <td>
+              <label class="btn btn-small btn-outline-dark w-100" for="update-file-system" style="width: max-content;"
+                name="update-file-system">
+                UPDATE FILE SYSTEM <i class="fa fa-upload"></i>
+              </label>
+              <input class="form-control d-none" type="file" id="update-file-system" accept=".xlsx">
+            </td>
+            <td>
+              <input class="form-control" placeholder="Name" id="analystName">
+            </td>
+            <td>
+              <input class="form-control" placeholder="Email" id="analystEmail">
+            </td>
+            <td>
+              <button type="button" class="btn btn-small btn-outline-dark rounded-pill" style="width: max-content;"
+                id="register-button">
+                <span class="fa fa-circle-notch fa-spin register-button-toggle" style="display: none;"></span>
+                <span class="register-button-toggle">SEND INVITE</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row p-0 m-0 mb-2">
+      <btn class="btn btn-outline-dark w-auto" id="status-verification-toggle-button">
+        <span class="status-verification-toggle" style="display: none;">View Status</span>
+        <span class="status-verification-toggle">View Verification Table</span>
+        <i class="fa fa-sort ms-2"></i>
+      </btn>
+      <div class="col">
+        <input class="form-control ms-5 w-25 status-verification-toggle" placeholder="Search Status Table"
+          id="view-status-table-search">
+        <input class="form-control ms-5 w-25 status-verification-toggle" placeholder="Search Verification Table"
+          id="verification-table-search" style="display: none;">
+      </div>
+    </div>
+    <div class="row p-0 m-0 mb-2 border rounded border-success custom-small">
+      <div id="table-sortable" class="mb-2 status-verification-toggle"></div>
+      <div id="verification-table" class="mb-2 status-verification-toggle" style="display: none;">
+      </div>
+    </div>
+    <div class="text-center p-0 m-0 mt-5 mb-3">
+      ANALYST VIEW
+    </div>
+    <div class="row p-0 m-0 border rounded">
+      <div class="input-group p-0 m-0">
+        <div class="col border-end">
+          <div class="input-group">
+            <label for="companyNameInput" class="col-form-label mx-3">
+              <i class="fa fa-search"></i>
+            </label>
+            <input class="form-control no-border ps-0" list="companyNameOptions" placeholder="Company name"
+              id="companyNameInput">
+            <datalist id="companyNameOptions"></datalist>
+          </div>
+        </div>
+        <div class="col border-end">
+          <div class="input-group">
+            <label for="metricNameInput" class="col-form-label mx-3">
+              <i class="fa fa-search"></i>
+            </label>
+            <input class="form-control border-0 ps-0" list="metricListOptions" placeholder="Metric name"
+              id="metricNameInput">
+            <datalist id="metricListOptions"></datalist>
+          </div>
+        </div>
+        <button class="btn btn-link" type="button" id="getCompanyData">
+          <span class="fa fa-arrow-right get-company-data-loading-toggle"></span>
+          <span class="fa fa-circle-notch fa-spin get-company-data-loading-toggle" style="display: none;"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row px-0 mx-0 mt-2">
+      <p>
+        <b>Metric Definition:</b>
+        <span id="metricOptionDefinition">Select a metric</span>
+      </p>
+    </div>
+    <div class="row my-2">
+      <div class="accordion mb-2">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingOne">
+            <button class="accordion-button collapsed justify-content-between mx-auto w-35" type="button"
+              data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
+              aria-controls="flush-collapseOne">
+              GLASSDOOR
+            </button>
+          </h2>
+          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+            data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">
+              <div class="row mb-2">
+                <div class="col-2 pe-0">
+                  <label for="companyTypeInput" class="col-form-label">Type:</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="companyTypeInput" class="form-control">
+                </div>
+                <div class="col-3">
+                  <label for="averageRating" class="col-form-label">Average Rating:</label>
+                </div>
+                <div class="col-2">
+                  <input type="text" id="averageRating" class="form-control">
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-2">
+                  <label for="companySize" class="col-form-label">Size:</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="companySize" class="form-control">
+                </div>
+                <div class="col-3">
+                  <label for="averageBenefitRating" class="col-form-label">Average Benefit Rating:</label>
+                </div>
+                <div class="col-2">
+                  <input type="text" id="averageBenefitRating" class="form-control">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-2">
+                  <label for="industryInput" class="col-form-label">Industry:</label>
+                </div>
+                <div class="col-5">
+                  <input type="text" id="industryInput" class="form-control">
+                </div>
+                <div class="col-3">
+                  <label for="reviewCount" class="col-form-label">Review Count:</label>
+                </div>
+                <div class="col-2">
+                  <input type="text" id="reviewCount" class="form-control">
+                </div>
+              </div>
+              <div class="row">
+                <a class="btn btn-outline-dark btn-small w-auto mx-auto" id="openGlassdoorButton" target="_blank">Open
+                  Glassdoor</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion mb-2">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingTwo">
+            <button class="accordion-button collapsed justify-content-between mx-auto w-35" type="button"
+              data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false"
+              aria-controls="flush-collapseTwo">
+              COMPANY LINKS
+            </button>
+          </h2>
+          <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo"
+            data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">
+              <table class="table table-borderless" id="companyLinksTable">
+                <tbody>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 8rem;">
+                      <label for="companyHomePage" class="col-form-label">Home Page:</label>
+                    </th>
+                    <td>
+                      <input type="text" id="companyHomePage" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyHomePageHref" target="_blank">
+                      </a>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row">
+                      <label for="careerPage" class="col-form-label">Career Page:</label>
+                    </th>
+                    <td>
+                      <input type="text" id="careerPage" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="careerPageHref" target="_blank">
+                      </a>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row">
+                      <label for="aboutUsPage" class="col-form-label">About Us:</label>
+                    </th>
+                    <td>
+                      <input type="text" id="aboutUsPage" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="aboutUsPageHref" target="_blank">
+                      </a>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row">
+                      <label for="csrPage" class="col-form-label">CSR Page:</label>
+                    </th>
+                    <td>
+                      <input type="text" id="csrPage" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="csrPageHref" target="_blank">
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="align-items-center row ms-0" id="add-another-link">
+                <div class="col">
+                  Add Another link
+                  <button class="btn btn-success ms-3 rounded-circle" id="add-another-link-button">
+                    <span class="fa fa-plus"></span>
+                  </button>
+                </div>
+              </div>
+              <div class="align-items-center row d-none ms-0" id="add-another-link-form">
+                <div class="col-4">
+                  <input type="text" id="add-another-link-form-url-label" class="form-control" placeholder="URL Label">
+                </div>
+                <div class="col-6">
+                  <input type="text" id="add-another-link-form-url" class="form-control" placeholder="URL">
+                </div>
+                <div class="col-2">
+                  <button class="btn btn-success border-0 rounded-circle" id="add-another-link-form-button">
+                    <span class="fa fa-check"></span>
+                  </button>
+                  <button class="btn btn-danger border-0 ms-2 rounded-circle" id="add-another-link-form-cancel-button">
+                    <span class="fa fa-close"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion mb-2">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingThree">
+            <button class="accordion-button collapsed justify-content-between mx-auto w-35" type="button"
+              data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false"
+              aria-controls="flush-collapseThree">
+              TOP 10 WEB RESULTS
+            </button>
+          </h2>
+          <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree"
+            data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">
+              <table class="table table-borderless">
+                <tbody>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">1.</th>
+                    <td>
+                      <input type="text" id="companyLinks0" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks0Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator0"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">2.</th>
+                    <td>
+                      <input type="text" id="companyLinks1" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks1Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator1"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">3.</th>
+                    <td>
+                      <input type="text" id="companyLinks2" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks2Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator2"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">4.</th>
+                    <td>
+                      <input type="text" id="companyLinks3" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks3Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator3"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">5.</th>
+                    <td>
+                      <input type="text" id="companyLinks4" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks4Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator4"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">6.</th>
+                    <td>
+                      <input type="text" id="companyLinks5" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks5Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator5"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">7.</th>
+                    <td>
+                      <input type="text" id="companyLinks6" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks6Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator6"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">8.</th>
+                    <td>
+                      <input type="text" id="companyLinks7" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks7Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator7"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">9.</th>
+                    <td>
+                      <input type="text" id="companyLinks8" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks8Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator8"></span>
+                    </td>
+                  </tr>
+                  <tr class="align-baseline">
+                    <th scope="row" style="width: 1rem;">10.</th>
+                    <td>
+                      <input type="text" id="companyLinks9" class="form-control">
+                    </td>
+                    <td style="width: 1rem;">
+                      <a class="fa fa-external-link text-decoration-none" id="companyLinks9Href" target="_blank">
+                      </a>
+                    </td>
+                    <td style="width: 3rem;" class="align-bottom text-center">
+                      <span class="dot" id="company-links-indicator9"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="row mb-2 text-center">
+                <p>RELEVANCY INDICATOR - WILL THIS LINK HAVE HELPFUL INFORMATION?</p>
+              </div>
+              <div class="row mb-2 text-center">
+                <div class="col d-flex">
+                  <span class="dot bg-primary me-2"></span>VERY LIKELY
+                </div>
+                <div class="col d-flex">
+                  <span class="dot bg-yellow me-2"></span> LIKELY
+                </div>
+                <div class="col d-flex">
+                  <span class="dot bg-orange me-2"></span> POSSIBLY
+                </div>
+                <div class="col d-flex">
+                  <span class="dot bg-danger me-2"></span> UNLIKELY
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion mb-2">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingFour">
+            <button class="accordion-button collapsed justify-content-between mx-auto w-35" type="button"
+              data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false"
+              aria-controls="flush-collapseFour">
+              VERIFICATION
+            </button>
+          </h2>
+          <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour"
+            data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">
+              <div class="row mb-4">
+                <div class="col">Relaunch Pad:</div>
+                <div class="col">
+                  <span id="relaunchNotAvailable" data-value="NOT AVAILABLE" class="badge bg-blue px-5 py-2">
+                    --
+                  </span>
+                  <span class="badge bg-primary px-5 py-2" id="rlpHC" style="display: none;">HIGH CHANCE</span>
+                  <span class="badge bg-blue px-5 py-2" id="rlpAC" style="display: none;">AVERAGE CHANCE</span>
+                  <span class="badge bg-warning px-5 py-2" id="rlpLC" style="display: none;">LOW CHANCE</span>
+                  <span class="badge bg-danger px-5 py-2" id="rlpNL" style="display: none;">NOT LISTED</span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">Second Chance Businesses:</div>
+                <div class="col">
+                  <span id="scbcNotAvailable" data-value="NOT AVAILABLE" class="badge bg-blue px-5 py-2">
+                    --
+                  </span>
+                  <span id="scbcListed" class="badge bg-primary px-5 py-2" style="display: none;">
+                    LISTED
+                  </span>
+                  <span id="scbcNotListed" class="badge bg-danger px-5 py-2" style="display: none;">
+                    NOT LISTED
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">Investigate Prisons List:</div>
+                <div class="col">
+                  <span id="prisonNotAvailable" data-value="NOT AVAILABLE" class="badge bg-blue px-5 py-2">
+                    --
+                  </span>
+                  <span id="prisonListed" class="badge bg-danger px-5 py-2" style="display: none;">
+                    LISTED
+                  </span>
+                  <span id="prisonNotListed" class="badge bg-primary px-5 py-2" style="display: none;">
+                    NOT LISTED
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingFive">
+            <button class="accordion-button collapsed justify-content-between mx-auto w-35" type="button"
+              data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false"
+              aria-controls="flush-collapseFive">
+              METRIC SCORING
+            </button>
+          </h2>
+          <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive"
+            data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">
+              <p>
+                <b class="fs-5">
+                  Metric:
+                  <span id="metricScoringDefinition" class="">
+                    Select a metric
+                  </span>
+                </b>
+              </p>
+              <div class="row justify-content-center" id="select-metric-option"></div>
+              <p id="metric-score-option-title" class="mt-3"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-12">
+        <h6 class="text-center">INPUT HELPFUL TEXT</h6>
+      </div>
+      <div class="col-12" id="comment-container">
+      </div>
+    </div>
+    <div class="row mb-5">
+      <button type="button" class="btn btn-small btn-outline-success rounded-pill w-auto mx-auto toggle-comment mb-2">
+        ADD COMMENT
+      </button>
+      <div class="col-12">
+        <textarea class="form-control toggle-comment mb-2" placeholder="Comment" style="display: none;"></textarea>
+      </div>
+      <button type="button" id="submit-comment"
+        class="btn btn-small btn-outline-success rounded-pill w-auto mx-auto toggle-comment mb-2"
+        style="display: none;">
+        Add Comment
+      </button>
+    </div>
+    <div class="row mb-5 text-center">
+      <button type="button" class="btn btn-success rounded-pill w-auto mx-auto" id="submit-data">
+        <span class="submit-data-button-loading-toggle" id="submit-button">SUBMIT</span>
+        <span class="submit-data-button-loading-toggle fa fa-circle-notch fa-spin" style="display: none;"></span>
+      </button>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+</body>
+
+</html>
